@@ -13,7 +13,7 @@ type Kelas struct {
 
 type Siswa struct {
 	Nama_Siswa    string `json:"nama_siswa"`
-	Nis           string `json:"nis"`
+	Nis           int    `json:"nis"`
 	Jenis_Kelamin string `json:"jenis_kelamin"`
 	No_Telp       string `json:"no_telp"`
 	Kelas         string `json:"kelas"`
