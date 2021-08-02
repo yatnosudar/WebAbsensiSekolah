@@ -13,34 +13,6 @@ type SiswaDetail struct {
 	Kelas         string `json:"kelas"`
 }
 
-func FetchAllSiswa() (Response, error) {
-	var obj SiswaDetail
-	var arrobj []SiswaDetail
-	var res Response
-
-	con := db.CreateCon()
-
-	sqlStatement := "SELECT * FROM siswa"
-
-	rows, err := con.Query(sqlStatement)
-	defer rows.Close()
-
-	if err != nil {
-		return res, err
-	}
-
-	for rows.Next() {
-		err = rows.Scan(&obj.Nama_Siswa, &obj.Nis, &obj.Jenis_Kelamin, &obj.No_Telp, &obj.Kelas)
-		arrobj = append(arrobj, obj)
-	}
-
-	res.Status = http.StatusOK
-	res.Message = "Succes"
-	res.Data = arrobj
-
-	return res, nil
-}
-
 func StoreSiswa(Nis int, Nama_Siswa string, Jenis_Kelamin string, No_telp string, Kelas string) (Response, error) {
 	var res Response
 
