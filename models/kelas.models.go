@@ -8,10 +8,12 @@ import (
 )
 
 type Kelas struct {
-	Kelas string `json:"kelas"`
+	Id_Kelas int    `json:"id_kelas"`
+	Kelas    string `json:"kelas"`
 }
 
 type Siswa struct {
+	Id_Siswa      int    `json:"id_siswa"`
 	Nama_Siswa    string `json:"nama_siswa"`
 	Nis           int    `json:"nis"`
 	Jenis_Kelamin string `json:"jenis_kelamin"`
@@ -20,6 +22,7 @@ type Siswa struct {
 }
 
 type Guru struct {
+	Id_Guru       int    `json:"id_guru"`
 	Nama_Guru     string `json:"nama_guru"`
 	Jenis_Kelamin string `json:"jenis_kelamin"`
 	Tanggal_Lahir string `json:"tanggal_lahir"`
@@ -44,7 +47,7 @@ func GetListKelas() (Response, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&obj.Kelas)
+		err = rows.Scan(&obj.Id_Kelas, &obj.Kelas)
 		arrobj = append(arrobj, obj)
 	}
 
@@ -66,10 +69,10 @@ func GetDetailKelas(kelas string) (Response, error) {
 
 	con := db.CreateCon()
 
-	sqlStatementKelas := "SELECT kelas FROM kelas WHERE kelas =?"
+	sqlStatementKelas := "SELECT * FROM kelas WHERE kelas =?"
 
 	errKelas := con.QueryRow(sqlStatementKelas, kelas).Scan(
-		&objKelas.Kelas,
+		&objKelas.Id_Kelas, &objKelas.Kelas,
 	)
 
 	if errKelas == sql.ErrNoRows {
@@ -84,7 +87,7 @@ func GetDetailKelas(kelas string) (Response, error) {
 	sqlStatementGuru := "SELECT * FROM guru WHERE kelas =?"
 
 	errGuru := con.QueryRow(sqlStatementGuru, kelas).Scan(
-		&objGuru.Nama_Guru, &objGuru.Jenis_Kelamin, &objGuru.Tanggal_Lahir, &objGuru.No_Telp, &objGuru.Kelas,
+		&objGuru.Id_Guru, &objGuru.Nama_Guru, &objGuru.Jenis_Kelamin, &objGuru.Tanggal_Lahir, &objGuru.No_Telp, &objGuru.Kelas,
 	)
 
 	if errGuru != nil {
@@ -101,16 +104,18 @@ func GetDetailKelas(kelas string) (Response, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&objSiswa.Nama_Siswa, &objSiswa.Nis, &objSiswa.Jenis_Kelamin, &objSiswa.No_Telp, &objSiswa.Kelas)
+		err = rows.Scan(&objSiswa.Id_Siswa, &objSiswa.Nama_Siswa, &objSiswa.Nis, &objSiswa.Jenis_Kelamin, &objSiswa.No_Telp, &objSiswa.Kelas)
 
 		arrobjSiswa = append(arrobjSiswa, objSiswa)
 	}
 
 	responseKelas := Kelas{
-		Kelas: objKelas.Kelas,
+		Id_Kelas: objKelas.Id_Kelas,
+		Kelas:    objKelas.Kelas,
 	}
 
 	responseGuru := Guru{
+		Id_Guru:       objGuru.Id_Guru,
 		Nama_Guru:     objGuru.Nama_Guru,
 		Jenis_Kelamin: objGuru.Jenis_Kelamin,
 		Tanggal_Lahir: objGuru.Tanggal_Lahir,

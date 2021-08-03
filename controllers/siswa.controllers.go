@@ -11,14 +11,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type SiswaDetail struct {
-	Nama_Siswa    string `json:"nama_siswa"`
-	Nis           int    `json:"nis"`
-	Jenis_Kelamin string `json:"jenis_kelamin"`
-	No_Telp       string `json:"no_telp"`
-	Kelas         string `json:"kelas"`
-}
-
 func FetchAllSiswa(c echo.Context) error {
 	siswa := models.SiswaDetail{}
 
@@ -42,7 +34,7 @@ func FetchAllSiswa(c echo.Context) error {
 	}
 
 	for SiswaRows.Next() {
-		err = SiswaRows.Scan(&siswa.Nama_Siswa, &siswa.Nis, &siswa.Jenis_Kelamin, &siswa.No_Telp, &siswa.Kelas)
+		err = SiswaRows.Scan(&siswa.Id_Siswa, &siswa.Nama_Siswa, &siswa.Nis, &siswa.Jenis_Kelamin, &siswa.No_Telp, &siswa.Kelas)
 
 		res = append(res, siswa)
 	}
@@ -51,7 +43,7 @@ func FetchAllSiswa(c echo.Context) error {
 
 	response := make(map[string]interface{}, 4)
 	response["data"] = res
-	response["total"] = total
+	response["total_data"] = total
 	response["page"] = page
 	response["last_page"] = math.Ceil(float64(total / int64(perPage)))
 
@@ -70,7 +62,7 @@ func StoreSiswa(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	result, err := models.StoreSiswa(conv_Nis, Nama_Siswa, Jenis_Kelamin, No_Telp, Kelas)
+	result, err := models.StoreSiswa(Nama_Siswa, conv_Nis, Jenis_Kelamin, No_Telp, Kelas)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -84,13 +76,15 @@ func UpdateSiswa(c echo.Context) error {
 	No_Telp := c.FormValue("no_telp")
 	Kelas := c.FormValue("kelas")
 	Nama_Siswa := c.FormValue("nama_siswa")
+	Id_Siswa := c.FormValue("id_siswa")
 
+	conv_Id, err := strconv.Atoi(Id_Siswa)
 	conv_Nis, err := strconv.Atoi(Nis)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	result, err := models.UpdateSiswa(conv_Nis, Jenis_Kelamin, No_Telp, Kelas, Nama_Siswa)
+	result, err := models.UpdateSiswa(Nama_Siswa, conv_Nis, Jenis_Kelamin, No_Telp, Kelas, conv_Id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -99,9 +93,11 @@ func UpdateSiswa(c echo.Context) error {
 }
 
 func DeleteSiswa(c echo.Context) error {
-	Nama_Siswa := c.FormValue("nama_siswa")
+	Id_Siswa := c.FormValue("id_siswa")
 
-	result, err := models.DeleteSiswa(Nama_Siswa)
+	conv_Id, _ := strconv.Atoi(Id_Siswa)
+
+	result, err := models.DeleteSiswa(conv_Id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

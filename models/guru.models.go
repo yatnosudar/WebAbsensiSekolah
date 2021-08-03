@@ -6,6 +6,7 @@ import (
 )
 
 type GuruDetail struct {
+	Id_Guru       int    `json:"id_guru"`
 	Nama_Guru     string `json:"nama_guru"`
 	Jenis_Kelamin string `json:"jenis_kelamin"`
 	Tanggal_Lahir string `json:"tanggal_lahir"`
@@ -72,19 +73,19 @@ func StoreGuru(Nama_Guru string, Jenis_Kelamin string, Tanggal_Lahir string, No_
 	return res, nil
 }
 
-func UpdateGuru(jenis_kelamin string, Tanggal_Lahir string, No_Telp string, kelas string, Nama_Guru string) (Response, error) {
+func UpdateGuru(Nama_Guru string, Jenis_Kelamin string, Tanggal_Lahir string, No_Telp string, kelas string, Id_Guru int) (Response, error) {
 	var res Response
 
 	con := db.CreateCon()
 
-	sqlStatement := "UPDATE guru SET jenis_kelamin = ?, tanggal_lahir = ?, No_Telp = ?, kelas = ? WHERE nama_guru = ?"
+	sqlStatement := "UPDATE guru SET nama_guru = ?, jenis_kelamin = ?, tanggal_lahir = ?, No_Telp = ?, kelas = ? WHERE id_guru = ?"
 
 	stmt, err := con.Prepare(sqlStatement)
 	if err != nil {
 		return res, err
 	}
 
-	result, err := stmt.Exec(jenis_kelamin, Tanggal_Lahir, No_Telp, kelas, Nama_Guru)
+	result, err := stmt.Exec(Nama_Guru, Jenis_Kelamin, Tanggal_Lahir, No_Telp, kelas, Id_Guru)
 	if err != nil {
 		return res, err
 	}
@@ -103,19 +104,19 @@ func UpdateGuru(jenis_kelamin string, Tanggal_Lahir string, No_Telp string, kela
 	return res, nil
 }
 
-func DeleteGuru(Nama_Guru string) (Response, error) {
+func DeleteGuru(Id_Guru int) (Response, error) {
 	var res Response
 
 	con := db.CreateCon()
 
-	sqlStatement := "DELETE FROM guru WHERE nama_guru = ?"
+	sqlStatement := "DELETE FROM guru WHERE id_guru = ?"
 
 	stmt, err := con.Prepare(sqlStatement)
 	if err != nil {
 		return res, err
 	}
 
-	result, err := stmt.Exec(Nama_Guru)
+	result, err := stmt.Exec(Id_Guru)
 	if err != nil {
 		return res, err
 	}

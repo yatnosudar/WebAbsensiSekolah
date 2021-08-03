@@ -3,6 +3,7 @@ package controllers
 import (
 	"echo/WebAbsensiSekolah/models"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -34,13 +35,15 @@ func StoreGuru(c echo.Context) error {
 }
 
 func UpdateGuru(c echo.Context) error {
+	Nama_Guru := c.FormValue("nama_guru")
 	Jenis_Kelamin := c.FormValue("jenis_kelamin")
 	Tanggal_Lahir := c.FormValue("tanggal_lahir")
 	No_Telp := c.FormValue("no_telp")
 	Kelas := c.FormValue("kelas")
-	Nama_Guru := c.FormValue("nama_guru")
+	Id_Guru := c.FormValue("id_guru")
 
-	result, err := models.UpdateGuru(Jenis_Kelamin, Tanggal_Lahir, No_Telp, Kelas, Nama_Guru)
+	conv_Id, _ := strconv.Atoi(Id_Guru)
+	result, err := models.UpdateGuru(Nama_Guru, Jenis_Kelamin, Tanggal_Lahir, No_Telp, Kelas, conv_Id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -49,9 +52,11 @@ func UpdateGuru(c echo.Context) error {
 }
 
 func DeleteGuru(c echo.Context) error {
-	Nama_Guru := c.FormValue("nama_guru")
+	Id_Guru := c.FormValue("id_guru")
 
-	result, err := models.DeleteGuru(Nama_Guru)
+	conv_Id, _ := strconv.Atoi(Id_Guru)
+
+	result, err := models.DeleteGuru(conv_Id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
