@@ -6,6 +6,7 @@ import (
 )
 
 type SiswaAcc struct {
+	Id       int    `json:"id"`
 	Nis      int    `json:"nis"`
 	Password string `json:"password"`
 }
@@ -27,7 +28,7 @@ func FetchAllSiswaAcc() (Response, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&obj.Nis, &obj.Password)
+		err = rows.Scan(&obj.Id, &obj.Nis, &obj.Password)
 		arrobj = append(arrobj, obj)
 	}
 
@@ -38,19 +39,19 @@ func FetchAllSiswaAcc() (Response, error) {
 	return res, nil
 }
 
-func StoreSiswaAcc(Nis int, Password string) (Response, error) {
+func StoreSiswaAcc(Id int, Nis int, Password string) (Response, error) {
 	var res Response
 
 	con := db.CreateCon()
 
-	sqlStatement := "INSERT acc_siswa (nis, password) VALUES (?, ?)"
+	sqlStatement := "INSERT acc_siswa (id, nis, password) VALUES (?, ?, ?)"
 
 	stmt, err := con.Prepare(sqlStatement)
 	if err != nil {
 		return res, err
 	}
 
-	result, err := stmt.Exec(Nis, Password)
+	result, err := stmt.Exec(Id, Nis, Password)
 	if err != nil {
 		return res, err
 	}
@@ -69,19 +70,19 @@ func StoreSiswaAcc(Nis int, Password string) (Response, error) {
 	return res, nil
 }
 
-func UpdateSiswaAcc(Nis int, Password string) (Response, error) {
+func UpdateSiswaAcc(Nis int, Password string, Id int) (Response, error) {
 	var res Response
 
 	con := db.CreateCon()
 
-	sqlStatement := "UPDATE acc_siswa SET password = ? WHERE nis = ?"
+	sqlStatement := "UPDATE acc_siswa SET password = ?, nis = ? WHERE id = ?"
 
 	stmt, err := con.Prepare(sqlStatement)
 	if err != nil {
 		return res, err
 	}
 
-	result, err := stmt.Exec(Password, Nis)
+	result, err := stmt.Exec(Password, Nis, Id)
 	if err != nil {
 		return res, err
 	}
@@ -100,19 +101,19 @@ func UpdateSiswaAcc(Nis int, Password string) (Response, error) {
 	return res, nil
 }
 
-func DeleteSiswaAcc(Nis int) (Response, error) {
+func DeleteSiswaAcc(Id int) (Response, error) {
 	var res Response
 
 	con := db.CreateCon()
 
-	sqlStatement := "DELETE FROM acc_siswa WHERE nis = ?"
+	sqlStatement := "DELETE FROM acc_siswa WHERE id = ?"
 
 	stmt, err := con.Prepare(sqlStatement)
 	if err != nil {
 		return res, err
 	}
 
-	result, err := stmt.Exec(Nis)
+	result, err := stmt.Exec(Id)
 	if err != nil {
 		return res, err
 	}

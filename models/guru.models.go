@@ -11,12 +11,11 @@ type GuruDetail struct {
 	Jenis_Kelamin string `json:"jenis_kelamin"`
 	Tanggal_Lahir string `json:"tanggal_lahir"`
 	No_Telp       string `json:"no_telp"`
-	Kelas         string `json:"kelas"`
 }
 
 func FetchAllGuru() (Response, error) {
-	var obj GuruDetail
-	var arrobj []GuruDetail
+	var objGuru GuruDetail
+	var arrobjGuru []GuruDetail
 	var res Response
 
 	con := db.CreateCon()
@@ -31,30 +30,30 @@ func FetchAllGuru() (Response, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&obj.Nama_Guru, &obj.Jenis_Kelamin, &obj.Tanggal_Lahir, &obj.No_Telp, &obj.Kelas)
-		arrobj = append(arrobj, obj)
+		err = rows.Scan(&objGuru.Id_Guru, &objGuru.Nama_Guru, &objGuru.Jenis_Kelamin, &objGuru.Tanggal_Lahir, &objGuru.No_Telp)
+		arrobjGuru = append(arrobjGuru, objGuru)
 	}
 
 	res.Status = http.StatusOK
 	res.Message = "Succes"
-	res.Data = arrobj
+	res.Data = arrobjGuru
 
 	return res, nil
 }
 
-func StoreGuru(Nama_Guru string, Jenis_Kelamin string, Tanggal_Lahir string, No_telp string, Kelas string) (Response, error) {
+func StoreGuru(Nama_Guru string, Jenis_Kelamin string, Tanggal_Lahir string, No_telp string) (Response, error) {
 	var res Response
 
 	con := db.CreateCon()
 
-	sqlStatement := "INSERT guru (nama_guru, jenis_kelamin, tanggal_lahir, no_telp, kelas) VALUES (?, ?, ?, ?, ?)"
+	sqlStatement := "INSERT guru (nama_guru, jenis_kelamin, tanggal_lahir, no_telp) VALUES (?, ?, ?, ?)"
 
 	stmt, err := con.Prepare(sqlStatement)
 	if err != nil {
 		return res, err
 	}
 
-	result, err := stmt.Exec(Nama_Guru, Jenis_Kelamin, Tanggal_Lahir, No_telp, Kelas)
+	result, err := stmt.Exec(Nama_Guru, Jenis_Kelamin, Tanggal_Lahir, No_telp)
 	if err != nil {
 		return res, err
 	}
@@ -73,19 +72,19 @@ func StoreGuru(Nama_Guru string, Jenis_Kelamin string, Tanggal_Lahir string, No_
 	return res, nil
 }
 
-func UpdateGuru(Nama_Guru string, Jenis_Kelamin string, Tanggal_Lahir string, No_Telp string, kelas string, Id_Guru int) (Response, error) {
+func UpdateGuru(Nama_Guru string, Jenis_Kelamin string, Tanggal_Lahir string, No_Telp string, Id_Guru int) (Response, error) {
 	var res Response
 
 	con := db.CreateCon()
 
-	sqlStatement := "UPDATE guru SET nama_guru = ?, jenis_kelamin = ?, tanggal_lahir = ?, No_Telp = ?, kelas = ? WHERE id_guru = ?"
+	sqlStatement := "UPDATE guru SET nama_guru = ?, jenis_kelamin = ?, tanggal_lahir = ?, No_Telp = ? WHERE id_guru = ?"
 
 	stmt, err := con.Prepare(sqlStatement)
 	if err != nil {
 		return res, err
 	}
 
-	result, err := stmt.Exec(Nama_Guru, Jenis_Kelamin, Tanggal_Lahir, No_Telp, kelas, Id_Guru)
+	result, err := stmt.Exec(Nama_Guru, Jenis_Kelamin, Tanggal_Lahir, No_Telp, Id_Guru)
 	if err != nil {
 		return res, err
 	}

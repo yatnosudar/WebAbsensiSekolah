@@ -10,6 +10,7 @@ import (
 type Kelas struct {
 	Id_Kelas int    `json:"id_kelas"`
 	Kelas    string `json:"kelas"`
+	Id_Guru  int    `json:"id_guru"`
 }
 
 type Siswa struct {
@@ -27,7 +28,6 @@ type Guru struct {
 	Jenis_Kelamin string `json:"jenis_kelamin"`
 	Tanggal_Lahir string `json:"tanggal_lahir"`
 	No_Telp       string `json:"no_telp"`
-	Kelas         string `json:"kelas"`
 }
 
 func GetListKelas() (Response, error) {
@@ -47,7 +47,7 @@ func GetListKelas() (Response, error) {
 	}
 
 	for rows.Next() {
-		err = rows.Scan(&obj.Id_Kelas, &obj.Kelas)
+		err = rows.Scan(&obj.Id_Kelas, &obj.Kelas, &obj.Id_Guru)
 		arrobj = append(arrobj, obj)
 	}
 
@@ -69,10 +69,10 @@ func GetDetailKelas(kelas string) (Response, error) {
 
 	con := db.CreateCon()
 
-	sqlStatementKelas := "SELECT * FROM kelas WHERE kelas =?"
+	sqlStatementKelas := "SELECT * FROM kelas WHERE kelas = ?"
 
 	errKelas := con.QueryRow(sqlStatementKelas, kelas).Scan(
-		&objKelas.Id_Kelas, &objKelas.Kelas,
+		&objKelas.Id_Kelas, &objKelas.Kelas, &objKelas.Id_Guru,
 	)
 
 	if errKelas == sql.ErrNoRows {
@@ -84,10 +84,10 @@ func GetDetailKelas(kelas string) (Response, error) {
 		return res, errKelas
 	}
 
-	sqlStatementGuru := "SELECT * FROM guru WHERE kelas =?"
+	sqlStatementGuru := "SELECT id_guru, nama_guru, jenis_kelamin, tanggal_lahir, no_telp FROM guru WHERE id_guru =?"
 
-	errGuru := con.QueryRow(sqlStatementGuru, kelas).Scan(
-		&objGuru.Id_Guru, &objGuru.Nama_Guru, &objGuru.Jenis_Kelamin, &objGuru.Tanggal_Lahir, &objGuru.No_Telp, &objGuru.Kelas,
+	errGuru := con.QueryRow(sqlStatementGuru, &objKelas.Id_Guru).Scan(
+		&objGuru.Id_Guru, &objGuru.Nama_Guru, &objGuru.Jenis_Kelamin, &objGuru.Tanggal_Lahir, &objGuru.No_Telp,
 	)
 
 	if errGuru != nil {
@@ -120,7 +120,6 @@ func GetDetailKelas(kelas string) (Response, error) {
 		Jenis_Kelamin: objGuru.Jenis_Kelamin,
 		Tanggal_Lahir: objGuru.Tanggal_Lahir,
 		No_Telp:       objGuru.No_Telp,
-		Kelas:         objGuru.Kelas,
 	}
 
 	res.Status = http.StatusOK

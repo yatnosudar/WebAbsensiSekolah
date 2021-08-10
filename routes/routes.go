@@ -2,7 +2,7 @@ package routes
 
 import (
 	"echo/WebAbsensiSekolah/controllers"
-	"echo/WebAbsensiSekolah/middlewares"
+	// "echo/WebAbsensiSekolah/middlewares"
 
 	"github.com/labstack/echo/v4"
 )
@@ -27,10 +27,14 @@ func Routes() *echo.Echo {
 	e.DELETE("/siswa/", controllers.DeleteSiswa)
 
 	// Acc Siswa
-	e.GET("/accsiswa", controllers.FetchAllSiswaAcc, middlewares.LoginAdmin)
+	e.GET("/accsiswa", controllers.FetchAllSiswaAcc)
 	e.POST("/accsiswa/", controllers.StoreSiswaAcc)
 	e.PUT("/accsiswa/", controllers.UpdateSiswaAcc)
 	e.DELETE("/accsiswa/", controllers.DeleteSiswaAcc)
+
+	// Absen Siswa
+	e.POST("/siswa-clock-in", controllers.ClockIn)
+	e.POST("/siswa-clock-out", controllers.ClockOut)
 
 	return e
 }

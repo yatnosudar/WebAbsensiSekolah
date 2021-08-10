@@ -1,7 +1,10 @@
 package controllers
 
 import (
+	"echo/WebAbsensiSekolah/db"
 	"echo/WebAbsensiSekolah/models"
+	"fmt"
+	"math"
 	"net/http"
 	"strconv"
 
@@ -9,14 +12,42 @@ import (
 )
 
 func FetchAllGuru(c echo.Context) error {
-	result, err := models.FetchAllGuru()
+	guru := models.GuruDetail{}
+
+	res := []models.GuruDetail{}
+	db := db.CreateCon()
+
+	sqlStatement := "SELECT * FROM guru"
+
+	page, _ := strconv.Atoi(c.QueryParam("page"))
+	perPage := 2
+
+	var total int64
+	db.QueryRow("SELECT count(id_guru) FROM siswa ORDER by id_guru").Scan(&total)
+
+	sqlStatement = fmt.Sprintf("%s LIMIT %d OFFSET %d", sqlStatement, perPage, (page)*perPage)
+
+	GuruRows, err := db.Query(sqlStatement)
 
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{
-			"message": err.Error(),
-		})
+		fmt.Println(err)
 	}
-	return c.JSON(http.StatusOK, result)
+
+	for GuruRows.Next() {
+		err = GuruRows.Scan(&guru.Id_Guru, &guru.Nama_Guru, &guru.Jenis_Kelamin, &guru.Tanggal_Lahir, &guru.No_Telp)
+
+		res = append(res, guru)
+	}
+
+	db.QueryRow(sqlStatement).Scan(&res)
+
+	response := make(map[string]interface{}, 4)
+	response["data"] = res
+	response["total_data"] = total
+	response["page"] = page
+	response["last_page"] = math.Ceil(float64(total / int64(perPage)))
+
+	return c.JSON(http.StatusOK, response)
 }
 
 func StoreGuru(c echo.Context) error {
@@ -24,9 +55,8 @@ func StoreGuru(c echo.Context) error {
 	Jenis_Kelamin := c.FormValue("jenis_kelamin")
 	Tanggal_Lahir := c.FormValue("tanggal_lahir")
 	No_Telp := c.FormValue("no_telp")
-	Kelas := c.FormValue("kelas")
 
-	result, err := models.StoreGuru(Nama_Guru, Jenis_Kelamin, Tanggal_Lahir, No_Telp, Kelas)
+	result, err := models.StoreGuru(Nama_Guru, Jenis_Kelamin, Tanggal_Lahir, No_Telp)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -39,11 +69,10 @@ func UpdateGuru(c echo.Context) error {
 	Jenis_Kelamin := c.FormValue("jenis_kelamin")
 	Tanggal_Lahir := c.FormValue("tanggal_lahir")
 	No_Telp := c.FormValue("no_telp")
-	Kelas := c.FormValue("kelas")
 	Id_Guru := c.FormValue("id_guru")
 
 	conv_Id, _ := strconv.Atoi(Id_Guru)
-	result, err := models.UpdateGuru(Nama_Guru, Jenis_Kelamin, Tanggal_Lahir, No_Telp, Kelas, conv_Id)
+	result, err := models.UpdateGuru(Nama_Guru, Jenis_Kelamin, Tanggal_Lahir, No_Telp, conv_Id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
