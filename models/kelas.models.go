@@ -125,9 +125,102 @@ func GetDetailKelas(kelas string) (Response, error) {
 	res.Status = http.StatusOK
 	res.Message = "Succes"
 	res.Data = map[string]interface{}{
-		"class": responseKelas,
+		"kelas": responseKelas,
 		"guru":  responseGuru,
 		"siswa": arrobjSiswa,
+	}
+
+	return res, nil
+}
+
+func AddKelas(kelas string, id_guru int) (Response, error) {
+	var res Response
+
+	con := db.CreateCon()
+
+	sqlStatement := "INSERT kelas (kelas, id_guru) VALUES (?, ?)"
+
+	stmt, err := con.Prepare(sqlStatement)
+	if err != nil {
+		return res, err
+	}
+
+	result, err := stmt.Exec(kelas, id_guru)
+	if err != nil {
+		return res, err
+	}
+
+	lastInsertedId, err := result.LastInsertId()
+	if err != nil {
+		return res, err
+	}
+
+	res.Status = http.StatusOK
+	res.Message = "Success"
+	res.Data = map[string]int64{
+		"last_inserted_id": lastInsertedId,
+	}
+
+	return res, nil
+}
+
+func UpdateKelas(kelas string, id_guru int, id_kelas int) (Response, error) {
+	var res Response
+
+	con := db.CreateCon()
+
+	sqlStatement := "UPDATE kelas SET kelas = ?, id_guru = ? WHERE id_kelas = ?"
+
+	stmt, err := con.Prepare(sqlStatement)
+	if err != nil {
+		return res, err
+	}
+
+	result, err := stmt.Exec(kelas, id_guru, id_kelas)
+	if err != nil {
+		return res, err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return res, err
+	}
+
+	res.Status = http.StatusOK
+	res.Message = "Success"
+	res.Data = map[string]int64{
+		"rows_affected": rowsAffected,
+	}
+
+	return res, nil
+}
+
+func DeleteKelas(Id_Kelas int) (Response, error) {
+	var res Response
+
+	con := db.CreateCon()
+
+	sqlStatement := "DELETE FROM kelas WHERE id_kelas = ?"
+
+	stmt, err := con.Prepare(sqlStatement)
+	if err != nil {
+		return res, err
+	}
+
+	result, err := stmt.Exec(Id_Kelas)
+	if err != nil {
+		return res, err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return res, err
+	}
+
+	res.Status = http.StatusOK
+	res.Message = "Success"
+	res.Data = map[string]int64{
+		"rows_affected": rowsAffected,
 	}
 
 	return res, nil

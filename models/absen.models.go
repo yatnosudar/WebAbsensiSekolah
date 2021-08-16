@@ -16,7 +16,7 @@ type AbsenSiswa struct {
 	Tanggal      string `json:"tanggal"`
 }
 
-func ClockIn(nis int, password string) (bool, error) {
+func ClockIn(nis int) (bool, error) {
 	var objAcc SiswaAcc
 
 	con := db.CreateCon()
@@ -27,7 +27,7 @@ func ClockIn(nis int, password string) (bool, error) {
 		&objAcc.Id, &objAcc.Nis, &objAcc.Password,
 	)
 	if err == sql.ErrNoRows {
-		fmt.Println("Please check your nis or password")
+		fmt.Println("Please check your nis")
 		return false, err
 	}
 	if err != nil {
@@ -37,7 +37,7 @@ func ClockIn(nis int, password string) (bool, error) {
 	return true, nil
 }
 
-func ClockOut(nis int, password string) (bool, error) {
+func ClockOut(nis int) (bool, error) {
 	var objAcc SiswaAcc
 
 	con := db.CreateCon()
@@ -48,7 +48,7 @@ func ClockOut(nis int, password string) (bool, error) {
 		&objAcc.Id, &objAcc.Nis, &objAcc.Password,
 	)
 	if err == sql.ErrNoRows {
-		fmt.Println("Please check your nis or password")
+		fmt.Println("Please check your nis")
 		return false, err
 	}
 	if err != nil {

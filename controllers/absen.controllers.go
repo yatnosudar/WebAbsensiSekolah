@@ -25,11 +25,10 @@ func ClockIn(c echo.Context) error {
 	con := db.CreateCon()
 
 	nis := c.FormValue("nis")
-	password := c.FormValue("password")
 
 	conv_nis, _ := strconv.Atoi(nis)
 
-	response, err := models.ClockIn(conv_nis, password)
+	response, err := models.ClockIn(conv_nis)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"message": err.Error(),
@@ -79,20 +78,18 @@ func ClockIn(c echo.Context) error {
 
 	id, _ := result.LastInsertId()
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"Anda telah berhasil melakukan absen masuk dengan id ": id,
-	})
+	fmt.Sprintf("Last inserted id : %s", id)
+	return c.JSON(http.StatusOK, "Anda telah berhasil melakukan absen masuk")
 }
 
 func ClockOut(c echo.Context) error {
 	con := db.CreateCon()
 
 	nis := c.FormValue("nis")
-	password := c.FormValue("password")
 
 	conv_nis, _ := strconv.Atoi(nis)
 
-	response, err := models.ClockOut(conv_nis, password)
+	response, err := models.ClockOut(conv_nis)
 	if err != nil {
 		return err
 	}
@@ -120,7 +117,6 @@ func ClockOut(c echo.Context) error {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"Rows Affected": rowsAffected,
-	})
+	fmt.Sprintf("RowsAffected : %d", rowsAffected)
+	return c.JSON(http.StatusOK, "Anda telah berhasil melakukan absen keluar")
 }
