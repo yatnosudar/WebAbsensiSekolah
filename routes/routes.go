@@ -21,14 +21,14 @@ func Routes() *echo.Echo {
 
 	// Guru
 	e.GET("/guru", controllers.FetchAllGuru)
-	e.POST("/guru/", controllers.StoreGuru)
-	e.PUT("/guru/", controllers.UpdateGuru)
-	e.DELETE("/guru/", controllers.DeleteGuru)
+	e.POST("/guru/", controllers.StoreGuru, middlewares.LoginAdmin)
+	e.PUT("/guru/", controllers.UpdateGuru, middlewares.LoginAdmin)
+	e.DELETE("/guru/", controllers.DeleteGuru, middlewares.LoginAdmin)
 
 	// Siswa
 	e.GET("/siswa", controllers.FetchAllSiswa)
-	e.POST("/siswa/", controllers.StoreSiswa)
-	e.PUT("/siswa/", controllers.UpdateSiswa)
+	e.POST("/siswa/", controllers.StoreSiswa, middlewares.LoginAdmin)
+	e.PUT("/siswa/", controllers.UpdateSiswa, middlewares.LoginAdmin)
 	e.DELETE("/siswa/", controllers.DeleteSiswa, middlewares.LoginAdmin)
 
 	// Acc Siswa
