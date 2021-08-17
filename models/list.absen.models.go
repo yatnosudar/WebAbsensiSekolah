@@ -7,16 +7,16 @@ import (
 	"net/http"
 )
 
-func ListAbsenKelas(kelas string) (Response, error) {
+func ListAbsenKelas(kelas string, bulan int) (Response, error) {
 	var obj AbsenSiswa
 	var arrobj []AbsenSiswa
 	var res Response
 
 	con := db.CreateCon()
 
-	sqlStatement := "SELECT * FROM absen WHERE kelas = ?"
+	sqlStatement := "SELECT * FROM absen WHERE kelas = ? AND MONTH(tanggal) = ?"
 
-	rows, err := con.Query(sqlStatement, kelas)
+	rows, err := con.Query(sqlStatement, kelas, bulan)
 	defer rows.Close()
 
 	if err == sql.ErrNoRows {

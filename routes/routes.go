@@ -33,14 +33,14 @@ func Routes() *echo.Echo {
 
 	// Acc Siswa
 	e.GET("/accsiswa", controllers.FetchAllSiswaAcc, middlewares.LoginAdmin)
-	e.POST("/accsiswa/", controllers.StoreSiswaAcc)
+	e.POST("/accsiswa/", controllers.StoreSiswaAcc, middlewares.LoginAdmin)
 	e.PUT("/accsiswa/", controllers.UpdateSiswaAcc)
-	e.DELETE("/accsiswa/", controllers.DeleteSiswaAcc)
+	e.DELETE("/accsiswa/", controllers.DeleteSiswaAcc, middlewares.LoginAdmin)
 
 	// Absen Siswa
 	e.POST("/absen/clock-in", controllers.ClockIn, middlewares.LoginSiswa)
 	e.POST("/absen/clock-out", controllers.ClockOut, middlewares.LoginSiswa)
-	e.GET("absen/list-absen/:kelas", controllers.ListAbsenKelas, middlewares.LoginGuru)
+	e.GET("/absen/list-absen/:kelas/:bulan", controllers.ListAbsenKelas, middlewares.LoginGuru)
 
 	// Membuat hash password
 	e.GET("/generate-hash/:password", controllers.GenerateHashPassword)

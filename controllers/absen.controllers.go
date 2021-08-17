@@ -79,7 +79,9 @@ func ClockIn(c echo.Context) error {
 	id, _ := result.LastInsertId()
 
 	fmt.Sprintf("Last inserted id : %s", id)
-	return c.JSON(http.StatusOK, "Anda telah berhasil melakukan absen masuk")
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"Anda telah berhasil melakukan absen masuk pada tanggal ": waktu.Format("2006-01-02"),
+	})
 }
 
 func ClockOut(c echo.Context) error {
@@ -118,5 +120,7 @@ func ClockOut(c echo.Context) error {
 	}
 
 	fmt.Sprintf("RowsAffected : %d", rowsAffected)
-	return c.JSON(http.StatusOK, "Anda telah berhasil melakukan absen keluar")
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"Anda telah berhasil melakukan absen keluar pada tanggal": waktu.Format("2006-01-02"),
+	})
 }
