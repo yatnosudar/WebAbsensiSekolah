@@ -33,14 +33,12 @@ func GetDetailKelas(c echo.Context) error {
 }
 
 func AddKelas(c echo.Context) error {
-	Id_Kelas := c.FormValue("id_kelas")
-	Kelas := c.FormValue("kelas")
-	Id_guru := c.FormValue("id_guru")
+	kelas := c.FormValue("kelas")
+	id_guru := c.FormValue("id_guru")
 
-	conv_Id_Kelas, _ := strconv.Atoi(Id_Kelas)
-	conv_Id_Guru, _ := strconv.Atoi(Id_guru)
+	conv_id, _ := strconv.Atoi(id_guru)
 
-	result, err := models.AddKelas(conv_Id_Kelas, Kelas, conv_Id_Guru)
+	result, err := models.AddKelas(kelas, conv_id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

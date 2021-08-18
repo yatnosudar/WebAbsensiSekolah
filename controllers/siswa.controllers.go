@@ -71,11 +71,11 @@ func StoreSiswa(c echo.Context) error {
 }
 
 func UpdateSiswa(c echo.Context) error {
-	Nama_Siswa := c.FormValue("nama_siswa")
 	Nis := c.FormValue("nis")
 	Jenis_Kelamin := c.FormValue("jenis_kelamin")
 	No_Telp := c.FormValue("no_telp")
 	Kelas := c.FormValue("kelas")
+	Nama_Siswa := c.FormValue("nama_siswa")
 	Id_Siswa := c.FormValue("id_siswa")
 
 	conv_Id, err := strconv.Atoi(Id_Siswa)

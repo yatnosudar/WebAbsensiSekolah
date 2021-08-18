@@ -23,3 +23,20 @@ func ListAbsenKelas(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, class)
 }
+
+func ListAbsenNis(c echo.Context) error {
+	Nis := c.Param("nis")
+	month := c.Param("month")
+
+	conv_month, _ := strconv.Atoi(month)
+	conv_Nis, _ := strconv.Atoi(Nis)
+
+	class, err := models.ListAbsenNis(conv_Nis, conv_month)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"message": err.Error(),
+		})
+	}
+	return c.JSON(http.StatusOK, class)
+}
