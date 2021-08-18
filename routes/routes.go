@@ -21,21 +21,21 @@ func Routes() *echo.Echo {
 
 	// Guru
 	e.GET("/guru", controllers.FetchAllGuru)
-	e.POST("/guru/", controllers.StoreGuru, middlewares.LoginAdmin)
-	e.PUT("/guru/", controllers.UpdateGuru, middlewares.LoginAdmin)
-	e.DELETE("/guru/", controllers.DeleteGuru, middlewares.LoginAdmin)
+	e.POST("/guru/add", controllers.StoreGuru, middlewares.LoginAdmin)
+	e.PUT("/guru/edit", controllers.UpdateGuru, middlewares.LoginAdmin)
+	e.DELETE("/guru/delete", controllers.DeleteGuru, middlewares.LoginAdmin)
 
 	// Siswa
 	e.GET("/siswa", controllers.FetchAllSiswa)
-	e.POST("/siswa/", controllers.StoreSiswa, middlewares.LoginAdmin)
-	e.PUT("/siswa/", controllers.UpdateSiswa, middlewares.LoginAdmin)
-	e.DELETE("/siswa/", controllers.DeleteSiswa, middlewares.LoginAdmin)
+	e.POST("/siswa/add", controllers.StoreSiswa, middlewares.LoginAdmin)
+	e.PUT("/siswa/edit", controllers.UpdateSiswa, middlewares.LoginAdmin)
+	e.DELETE("/siswa/delete", controllers.DeleteSiswa, middlewares.LoginAdmin)
 
 	// Acc Siswa
 	e.GET("/accsiswa", controllers.FetchAllSiswaAcc, middlewares.LoginAdmin)
-	e.POST("/accsiswa/", controllers.StoreSiswaAcc, middlewares.LoginAdmin)
-	e.PUT("/accsiswa/", controllers.UpdateSiswaAcc)
-	e.DELETE("/accsiswa/", controllers.DeleteSiswaAcc, middlewares.LoginAdmin)
+	e.POST("/accsiswa/add", controllers.StoreSiswaAcc, middlewares.LoginAdmin)
+	e.PUT("/accsiswa/edit", controllers.UpdateSiswaAcc)
+	e.DELETE("/accsiswa/delete", controllers.DeleteSiswaAcc, middlewares.LoginAdmin)
 
 	// Absen Siswa
 	e.POST("/absen/clock-in", controllers.ClockIn, middlewares.LoginSiswa)

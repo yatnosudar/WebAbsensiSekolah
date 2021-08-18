@@ -2,6 +2,7 @@ package models
 
 import (
 	"echo/WebAbsensiSekolah/db"
+	"fmt"
 	"net/http"
 )
 
@@ -18,7 +19,7 @@ func FetchAllSiswaAcc() (Response, error) {
 
 	con := db.CreateCon()
 
-	sqlStatement := "SELECT * FROM acc_siswa"
+	sqlStatement := "SELECT * FROM account_siswa"
 
 	rows, err := con.Query(sqlStatement)
 	defer rows.Close()
@@ -39,12 +40,12 @@ func FetchAllSiswaAcc() (Response, error) {
 	return res, nil
 }
 
-func StoreSiswaAcc(Id int, Nis int, Password string) (Response, error) {
+func StoreSiswaAcc(Id, Nis int, Password string) (Response, error) {
 	var res Response
 
 	con := db.CreateCon()
 
-	sqlStatement := "INSERT acc_siswa (id, nis, password) VALUES (?, ?, ?)"
+	sqlStatement := "INSERT account_siswa (id_account, nis, password) VALUES (?, ?, ?)"
 
 	stmt, err := con.Prepare(sqlStatement)
 	if err != nil {
@@ -61,10 +62,12 @@ func StoreSiswaAcc(Id int, Nis int, Password string) (Response, error) {
 		return res, err
 	}
 
+	fmt.Println("Last Insert Id : ", lastInsertedId)
+
 	res.Status = http.StatusOK
 	res.Message = "Success"
-	res.Data = map[string]int64{
-		"last_inserted_id": lastInsertedId,
+	res.Data = map[string]string{
+		"Pesan": "Anda telah berhasil menambahkan akun",
 	}
 
 	return res, nil
@@ -75,7 +78,7 @@ func UpdateSiswaAcc(Nis int, Password string, Id int) (Response, error) {
 
 	con := db.CreateCon()
 
-	sqlStatement := "UPDATE acc_siswa SET password = ?, nis = ? WHERE id = ?"
+	sqlStatement := "UPDATE account_siswa SET password = ?, nis = ? WHERE id_account = ?"
 
 	stmt, err := con.Prepare(sqlStatement)
 	if err != nil {
@@ -106,7 +109,7 @@ func DeleteSiswaAcc(Id int) (Response, error) {
 
 	con := db.CreateCon()
 
-	sqlStatement := "DELETE FROM acc_siswa WHERE id = ?"
+	sqlStatement := "DELETE FROM account_siswa WHERE id_account = ?"
 
 	stmt, err := con.Prepare(sqlStatement)
 	if err != nil {

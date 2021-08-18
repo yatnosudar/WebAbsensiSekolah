@@ -133,19 +133,19 @@ func GetDetailKelas(kelas string) (Response, error) {
 	return res, nil
 }
 
-func AddKelas(kelas string, id_guru int) (Response, error) {
+func AddKelas(id_kelas int, kelas string, id_guru int) (Response, error) {
 	var res Response
 
 	con := db.CreateCon()
 
-	sqlStatement := "INSERT kelas (kelas, id_guru) VALUES (?, ?)"
+	sqlStatement := "INSERT kelas (id_kelas, kelas, id_guru) VALUES (?, ?, ?)"
 
 	stmt, err := con.Prepare(sqlStatement)
 	if err != nil {
 		return res, err
 	}
 
-	result, err := stmt.Exec(kelas, id_guru)
+	result, err := stmt.Exec(id_kelas, kelas, id_guru)
 	if err != nil {
 		return res, err
 	}
@@ -154,11 +154,12 @@ func AddKelas(kelas string, id_guru int) (Response, error) {
 	if err != nil {
 		return res, err
 	}
+	fmt.Println("Last insert id : ", lastInsertedId)
 
 	res.Status = http.StatusOK
 	res.Message = "Success"
-	res.Data = map[string]int64{
-		"last_inserted_id": lastInsertedId,
+	res.Data = map[string]string{
+		"Pesan": "Anda telah berhasil menambahkan kelas",
 	}
 
 	return res, nil
