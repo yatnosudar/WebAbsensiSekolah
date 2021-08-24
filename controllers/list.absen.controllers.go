@@ -26,9 +26,9 @@ func ListAbsenKelas(c echo.Context) error {
 
 func ListAbsenNis(c echo.Context) error {
 	Nis := c.Param("nis")
-	month := c.Param("month")
+	bulan := c.Param("bulan")
 
-	conv_month, _ := strconv.Atoi(month)
+	conv_month, _ := strconv.Atoi(bulan)
 	conv_Nis, _ := strconv.Atoi(Nis)
 
 	class, err := models.ListAbsenNis(conv_Nis, conv_month)
