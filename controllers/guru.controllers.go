@@ -23,7 +23,7 @@ func FetchAllGuru(c echo.Context) error {
 	perPage := 2
 
 	var total int64
-	db.QueryRow("SELECT count(nis) FROM siswa ORDER by nis").Scan(&total)
+	db.QueryRow("SELECT count(id_guru) FROM guru ORDER by id_guru").Scan(&total)
 
 	sqlStatement = fmt.Sprintf("%s LIMIT %d OFFSET %d", sqlStatement, perPage, (page)*perPage)
 

@@ -37,7 +37,7 @@ func GetListKelas() (Response, error) {
 
 	con := db.CreateCon()
 
-	sqlStatement := "SELECT * FROM kelas"
+	sqlStatement := "SELECT * FROM kelas ORDER BY id_kelas"
 
 	rows, err := con.Query(sqlStatement)
 	defer rows.Close()
@@ -112,6 +112,7 @@ func GetDetailKelas(kelas string) (Response, error) {
 	responseKelas := Kelas{
 		Id_Kelas: objKelas.Id_Kelas,
 		Kelas:    objKelas.Kelas,
+		Id_Guru:  objKelas.Id_Guru,
 	}
 
 	responseGuru := Guru{
