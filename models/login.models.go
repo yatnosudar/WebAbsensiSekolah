@@ -19,8 +19,10 @@ func LoginGuru(username, password string) (bool, error) {
 
 	con := db.CreateCon()
 
+	// Perintah sql untuk login dari tabel guru dengan role guru
 	sqlStatement := "SELECT id_guru, username, password FROM guru WHERE username = ? AND role ='guru'"
 
+	// Syntax untuk memilih 1 baris data
 	err := con.QueryRow(sqlStatement, username).Scan(
 		&obj.Id_Guru, &obj.Username, &pwd,
 	)
@@ -35,6 +37,7 @@ func LoginGuru(username, password string) (bool, error) {
 		return false, err
 	}
 
+	// Mengecek apakah hash di database dan password yang dimasukkan sama
 	match, err := helper.CheckPasswordHash(password, pwd)
 	if !match {
 		fmt.Println("Hash and Password doesn't match!")
@@ -50,8 +53,10 @@ func LoginAdmin(username, password string) (bool, error) {
 
 	con := db.CreateCon()
 
+	// Perintah sql untuk login dari tabel guru dengan role admin
 	sqlStatement := "SELECT id_guru, username, password FROM guru WHERE username = ? AND role ='admin'"
 
+	// Syntax untuk memilih 1 baris data
 	err := con.QueryRow(sqlStatement, username).Scan(
 		&obj.Id_Guru, &obj.Username, &pwd,
 	)
@@ -66,6 +71,7 @@ func LoginAdmin(username, password string) (bool, error) {
 		return false, err
 	}
 
+	// Mengecek apakah hash di database dan password yang dimasukkan sama
 	match, err := helper.CheckPasswordHash(password, pwd)
 	if !match {
 		fmt.Println("Hash and Password doesn't match!")
@@ -80,6 +86,7 @@ func LoginSiswa(username, password string) (bool, error) {
 
 	con := db.CreateCon()
 
+	// Perintah sql untuk memilih data di tabel account
 	sqlStatement := "SELECT * FROM account_siswa"
 
 	err := con.QueryRow(sqlStatement).Scan(

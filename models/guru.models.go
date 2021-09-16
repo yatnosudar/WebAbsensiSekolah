@@ -18,6 +18,7 @@ func StoreGuru(Nama_Guru, Jenis_Kelamin, Tanggal_Lahir, No_telp, username, passw
 
 	con := db.CreateCon()
 
+	// perintah sql untuk menambah data guru
 	sqlStatement := "INSERT guru (nama_guru, jenis_kelamin, tanggal_lahir, no_telp, username, password, role) VALUES (?, ?, ?, ?, ?, ?, ?)"
 
 	stmt, err := con.Prepare(sqlStatement)
@@ -51,11 +52,13 @@ func UpdateGuru(Nama_Guru string, Jenis_Kelamin, Tanggal_Lahir, No_Telp, usernam
 
 	sqlStatement := "UPDATE guru SET nama_guru = ?, jenis_kelamin = ?, tanggal_lahir = ?, No_Telp = ?, username = ?, password = ?, role = ? WHERE id_guru = ?"
 
+	// untuk mengeksekusi perintah sql
 	stmt, err := con.Prepare(sqlStatement)
 	if err != nil {
 		return res, err
 	}
 
+	// eksekusi dari menempatkan parameter ke dalam placeholder
 	result, err := stmt.Exec(Nama_Guru, Jenis_Kelamin, Tanggal_Lahir, No_Telp, username, password, role, Id_Guru)
 	if err != nil {
 		return res, err
@@ -92,11 +95,13 @@ func DeleteGuru(Id_Guru int) (Response, error) {
 		return res, err
 	}
 
+	// baris terubah
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
 		return res, err
 	}
 
+	// Response
 	res.Status = http.StatusOK
 	res.Message = "Success"
 	res.Data = map[string]int64{

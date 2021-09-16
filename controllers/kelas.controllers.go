@@ -20,6 +20,7 @@ func GetListKelas(c echo.Context) error {
 }
 
 func GetDetailKelas(c echo.Context) error {
+	// menggunakan parameter untuk memilih kelas
 	kelas := c.Param("kelas")
 
 	class, err := models.GetDetailKelas(kelas)
@@ -33,14 +34,14 @@ func GetDetailKelas(c echo.Context) error {
 }
 
 func AddKelas(c echo.Context) error {
-	Id_Kelas := c.FormValue("id_kelas")
 	Kelas := c.FormValue("kelas")
 	Id_guru := c.FormValue("id_guru")
 
-	conv_Id_Kelas, _ := strconv.Atoi(Id_Kelas)
+	// konversi dari string ke int
 	conv_Id_Guru, _ := strconv.Atoi(Id_guru)
 
-	result, err := models.AddKelas(conv_Id_Kelas, Kelas, conv_Id_Guru)
+	// mengisi parameter di package models dengan fom value di atas
+	result, err := models.AddKelas(Kelas, conv_Id_Guru)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

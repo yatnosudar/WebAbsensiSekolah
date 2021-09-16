@@ -69,6 +69,7 @@ func GetDetailKelas(kelas string) (Response, error) {
 
 	con := db.CreateCon()
 
+	// perintah sql untuk memilih 1 kelas
 	sqlStatementKelas := "SELECT * FROM kelas WHERE kelas = ?"
 
 	errKelas := con.QueryRow(sqlStatementKelas, kelas).Scan(
@@ -84,6 +85,7 @@ func GetDetailKelas(kelas string) (Response, error) {
 		return res, errKelas
 	}
 
+	// menampilkan data guru yang menjadi wali kelas
 	sqlStatementGuru := "SELECT id_guru, nama_guru, jenis_kelamin, tanggal_lahir, no_telp FROM guru WHERE id_guru =?"
 
 	errGuru := con.QueryRow(sqlStatementGuru, &objKelas.Id_Guru).Scan(
@@ -94,6 +96,7 @@ func GetDetailKelas(kelas string) (Response, error) {
 		return res, errGuru
 	}
 
+	// menampilkan data siswa yang ada di kelas tersebut
 	sqlStatementSiswa := "SELECT * FROM siswa WHERE kelas =?"
 
 	rows, err := con.Query(sqlStatementSiswa, kelas)
@@ -123,8 +126,9 @@ func GetDetailKelas(kelas string) (Response, error) {
 		No_Telp:       objGuru.No_Telp,
 	}
 
+	// response
 	res.Status = http.StatusOK
-	res.Message = "Succes"
+	res.Message = "success"
 	res.Data = map[string]interface{}{
 		"kelas": responseKelas,
 		"guru":  responseGuru,
@@ -134,19 +138,20 @@ func GetDetailKelas(kelas string) (Response, error) {
 	return res, nil
 }
 
-func AddKelas(id_kelas int, kelas string, id_guru int) (Response, error) {
+func AddKelas(kelas string, id_guru int) (Response, error) {
 	var res Response
 
 	con := db.CreateCon()
 
-	sqlStatement := "INSERT kelas (id_kelas, kelas, id_guru) VALUES (?, ?, ?)"
+	// perintah sql untuk menambahkan kelas
+	sqlStatement := "INSERT kelas (kelas, id_guru) VALUES (?, ?)"
 
 	stmt, err := con.Prepare(sqlStatement)
 	if err != nil {
 		return res, err
 	}
 
-	result, err := stmt.Exec(id_kelas, kelas, id_guru)
+	result, err := stmt.Exec(kelas, id_guru)
 	if err != nil {
 		return res, err
 	}
@@ -157,10 +162,11 @@ func AddKelas(id_kelas int, kelas string, id_guru int) (Response, error) {
 	}
 	fmt.Println("Last insert id : ", lastInsertedId)
 
+	// response
 	res.Status = http.StatusOK
-	res.Message = "Success"
+	res.Message = "success"
 	res.Data = map[string]string{
-		"Pesan": "Anda telah berhasil menambahkan kelas",
+		"pesan": "anda telah berhasil menambahkan kelas",
 	}
 
 	return res, nil

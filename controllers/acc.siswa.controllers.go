@@ -19,7 +19,7 @@ func FetchAllSiswaAcc(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
-func StoreSiswaAcc(c echo.Context) error {
+func AddSiswaAcc(c echo.Context) error {
 	Id := c.FormValue("id")
 	Nis := c.FormValue("nis")
 	Password := c.FormValue("password")
@@ -30,7 +30,7 @@ func StoreSiswaAcc(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	result, err := models.StoreSiswaAcc(conv_Id, conv_Nis, Password)
+	result, err := models.AddSiswaAcc(conv_Id, conv_Nis, Password)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

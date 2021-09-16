@@ -50,7 +50,7 @@ func FetchAllSiswa(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-func StoreSiswa(c echo.Context) error {
+func AddSiswa(c echo.Context) error {
 	Nama_Siswa := c.FormValue("nama_siswa")
 	Nis := c.FormValue("nis")
 	Jenis_Kelamin := c.FormValue("jenis_kelamin")
@@ -62,7 +62,7 @@ func StoreSiswa(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	result, err := models.StoreSiswa(Nama_Siswa, conv_Nis, Jenis_Kelamin, No_Telp, Kelas)
+	result, err := models.AddSiswa(Nama_Siswa, conv_Nis, Jenis_Kelamin, No_Telp, Kelas)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
@@ -84,6 +84,7 @@ func UpdateSiswa(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
+	// mengisi parameter dari package models dengan form value
 	result, err := models.UpdateSiswa(Nama_Siswa, conv_Nis, Jenis_Kelamin, No_Telp, Kelas, conv_Id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())

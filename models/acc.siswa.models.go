@@ -40,7 +40,7 @@ func FetchAllSiswaAcc() (Response, error) {
 	return res, nil
 }
 
-func StoreSiswaAcc(Id, Nis int, Password string) (Response, error) {
+func AddSiswaAcc(Id, Nis int, Password string) (Response, error) {
 	var res Response
 
 	con := db.CreateCon()

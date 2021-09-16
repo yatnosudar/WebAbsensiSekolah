@@ -17,14 +17,19 @@ func FetchAllGuru(c echo.Context) error {
 	res := []models.GuruDetail{}
 	db := db.CreateCon()
 
+	// perintah sql untuk menampilkan data guru
 	sqlStatement := "SELECT id_guru, nama_guru, jenis_kelamin,tanggal_lahir, no_telp FROM guru"
 
+	// menambah query parameter dengan key page
 	page, _ := strconv.Atoi(c.QueryParam("page"))
 	perPage := 2
 
 	var total int64
+
+	// untuk menghitung jumlah data di tabel guru
 	db.QueryRow("SELECT count(id_guru) FROM guru ORDER by id_guru").Scan(&total)
 
+	// untuk membatasi jumlah data yang ditampilkan
 	sqlStatement = fmt.Sprintf("%s LIMIT %d OFFSET %d", sqlStatement, perPage, (page)*perPage)
 
 	GuruRows, err := db.Query(sqlStatement)
@@ -41,6 +46,7 @@ func FetchAllGuru(c echo.Context) error {
 
 	db.QueryRow(sqlStatement).Scan(&res)
 
+	// Response
 	response := make(map[string]interface{}, 4)
 	response["data"] = res
 	response["total_data"] = total
@@ -77,7 +83,9 @@ func UpdateGuru(c echo.Context) error {
 	Role := c.FormValue("role")
 	Id_Guru := c.FormValue("id_guru")
 
+	// konversi dari string ke int
 	conv_Id, _ := strconv.Atoi(Id_Guru)
+
 	result, err := models.UpdateGuru(Nama_Guru, Jenis_Kelamin, Tanggal_Lahir, No_Telp, Username, Password, Role, conv_Id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())

@@ -27,14 +27,14 @@ func Routes() *echo.Echo {
 
 	// Siswa
 	e.GET("/siswa", controllers.FetchAllSiswa)
-	e.POST("/siswa/add", controllers.StoreSiswa, middlewares.LoginAdmin)
+	e.POST("/siswa/add", controllers.AddSiswa, middlewares.LoginAdmin)
 	e.PUT("/siswa/edit", controllers.UpdateSiswa, middlewares.LoginAdmin)
 	e.DELETE("/siswa/delete", controllers.DeleteSiswa, middlewares.LoginAdmin)
 
 	// Acc Siswa
 	e.GET("/accsiswa", controllers.FetchAllSiswaAcc, middlewares.LoginAdmin)
-	e.POST("/accsiswa/add", controllers.StoreSiswaAcc, middlewares.LoginAdmin)
-	e.PUT("/accsiswa/edit", controllers.UpdateSiswaAcc)
+	e.POST("/accsiswa/add", controllers.AddSiswaAcc, middlewares.LoginAdmin)
+	e.PUT("/accsiswa/edit", controllers.UpdateSiswaAcc, middlewares.LoginSiswa)
 	e.DELETE("/accsiswa/delete", controllers.DeleteSiswaAcc, middlewares.LoginAdmin)
 
 	// Absen Siswa

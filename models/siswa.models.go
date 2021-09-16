@@ -14,7 +14,7 @@ type SiswaDetail struct {
 	Kelas         string `json:"kelas"`
 }
 
-func StoreSiswa(Nama_Siswa string, Nis int, Jenis_Kelamin string, No_telp string, Kelas string) (Response, error) {
+func AddSiswa(Nama_Siswa string, Nis int, Jenis_Kelamin string, No_telp string, Kelas string) (Response, error) {
 	var res Response
 
 	con := db.CreateCon()
@@ -57,6 +57,7 @@ func UpdateSiswa(Nama_Siswa string, Nis int, jenis_kelamin string, No_Telp strin
 		return res, err
 	}
 
+	// menggunakan parameter untuk menampung placeholder dari perintah sql di atas
 	result, err := stmt.Exec(Nama_Siswa, Nis, jenis_kelamin, No_Telp, kelas, Id_Siswa)
 	if err != nil {
 		return res, err

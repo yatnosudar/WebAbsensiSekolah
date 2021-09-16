@@ -15,7 +15,7 @@ type AbsenSiswa struct {
 	Id_Absen     int    `json:"id_absen"`
 	Id_Guru      int    `json:"id_guru"`
 	Nis          int    `json:"nis"`
-	Kelas        string `json:"kelas"`
+	Id_Kelas     string `json:"id_kelas"`
 	Absen_Masuk  string `json:"absen_masuk"`
 	Absen_Keluar string `json:"absen_keluar"`
 	Tanggal      string `json:"tanggal"`
@@ -39,10 +39,12 @@ func ClockIn(c echo.Context) error {
 	}
 
 	var obj AbsenSiswa
+
+	// perintah sql untuk mendapatkan kelas dari nis yang diisi tadi
 	sqlStatementKelas := "SELECT kelas FROM siswa WHERE nis = ?"
 
 	errKelas := con.QueryRow(sqlStatementKelas, &conv_nis).Scan(
-		&obj.Kelas,
+		&obj.Id_Kelas,
 	)
 
 	if errKelas != nil {
@@ -50,9 +52,10 @@ func ClockIn(c echo.Context) error {
 		return errKelas
 	}
 
-	sqlStatementIdGuru := "SELECT id_guru FROM kelas WHERE kelas = ?"
+	// perintah sql untuk mendapatkan id guru yang menjadi wali dari kelas di atas
+	sqlStatementIdGuru := "SELECT id_guru FROM kelas WHERE id_kelas = ?"
 
-	errGuru := con.QueryRow(sqlStatementIdGuru, &obj.Kelas).Scan(
+	errGuru := con.QueryRow(sqlStatementIdGuru, &obj.Id_Kelas).Scan(
 		&obj.Id_Guru,
 	)
 
@@ -61,9 +64,13 @@ func ClockIn(c echo.Context) error {
 		return errGuru
 	}
 
+	// untuk mendapatkan waktu hari
 	waktu := time.Now()
+
+	// untuk mendapatkan data waktu sekarang sesuai format mysql
 	waktu_sekarang := waktu.Format(time.RFC3339)
 
+	// perintah sql untuk memasukkan data ke dalam tabel absen saat siswa melakukan absen
 	sqlStatementAbsen := "INSERT absen (id_guru, nis, kelas, absen_masuk, tanggal) VALUES (?, ?, ? , ?, ?)"
 
 	stmt, err := con.Prepare(sqlStatementAbsen)
@@ -71,7 +78,7 @@ func ClockIn(c echo.Context) error {
 		return err
 	}
 
-	result, err := stmt.Exec(obj.Id_Guru, conv_nis, obj.Kelas, waktu_sekarang, waktu.Format("2006-01-02"))
+	result, err := stmt.Exec(obj.Id_Guru, conv_nis, obj.Id_Kelas, waktu_sekarang, waktu.Format("2006-01-02"))
 	if err != nil {
 		return err
 	}
@@ -99,6 +106,7 @@ func ClockOut(c echo.Context) error {
 		return echo.ErrUnauthorized
 	}
 
+	// update data absen berdasarkan per hari ini dan menentukan baris nya dengan nis yang diisi
 	sqlStatementAbsen := "UPDATE absen SET absen_keluar = ? WHERE nis = ? AND tanggal = ?"
 
 	stmt, err := con.Prepare(sqlStatementAbsen)

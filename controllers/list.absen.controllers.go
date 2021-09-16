@@ -9,6 +9,7 @@ import (
 )
 
 func ListAbsenKelas(c echo.Context) error {
+	// untuk menampung kelas dan bulan yang akan dipilih menggunakan parameter
 	kelas := c.Param("kelas")
 	bulan := c.Param("bulan")
 

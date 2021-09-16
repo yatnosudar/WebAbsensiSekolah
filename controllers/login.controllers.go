@@ -20,6 +20,7 @@ func GenerateHashPassword(c echo.Context) error {
 }
 
 func LoginGuru(c echo.Context) error {
+	// Mengisi form value dengan key
 	username := c.FormValue("username")
 	password := c.FormValue("password")
 
@@ -66,6 +67,7 @@ func LoginAdmin(c echo.Context) error {
 		return echo.ErrUnauthorized
 	}
 
+	// Claim token JWT
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	claims := token.Claims.(jwt.MapClaims)
@@ -80,6 +82,7 @@ func LoginAdmin(c echo.Context) error {
 		})
 	}
 
+	// Response
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"token": t,
 	})
@@ -89,6 +92,7 @@ func LoginSiswa(c echo.Context) error {
 	username := c.FormValue("username")
 	password := c.FormValue("password")
 
+	// Menjalankan perintah di bagian models
 	response, err := models.LoginSiswa(username, password)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
